@@ -4,6 +4,7 @@ var path = require('path');
 var mongoose = require('mongoose');
 
 var port = process.env.PORT || 8080;
+var mongoURL = process.env.MONGOLAB_URI;
 var reURLhead = /^https?$/;
 var reURLbody = /^www[\S]*[a-z]{2,5}/;
 
@@ -16,7 +17,7 @@ var URL = mongoose.model("URL", new Schema({
     shortURL: String
 }));
 
-mongoose.connect("mongodb://127.0.0.1:27017/data");
+mongoose.connect(mongoURL);
 
 app.use(express.static(path.join(__dirname, 'templates')));
 app.use('/styles', express.static(path.join(__dirname, 'templates')));
