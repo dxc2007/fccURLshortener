@@ -5,8 +5,9 @@ var mongoose = require('mongoose');
 
 var port = process.env.PORT || 8080;
 var mongoURL = process.env.MONGOLAB_URI;
-var reURLhead = /^https?$/;
-var reURLbody = /^www[\S]*[a-z]{2,5}/;
+var reURLhead = /^https?:$/;
+var reURLbody = /^\/\/[www]?[\S]*[a-z]{2,5}\/?[\S]*/;
+var blah = "/new/http://www.blah.com/blah";
 
 var Schema = mongoose.Schema;
 var ObjectId = Schema.ObjectId;
@@ -30,18 +31,18 @@ app.get('/', function(req, res) {
     res.render("homepage.ejs", { host: host });
 });
 
-app.get("/new/:head\://:body", function(req, res) {
+app.get("/new/:head*", function(req, res) {
     var head = req.params.head.match(reURLhead);
-    var body = req.params.body.match(reURLbody);
+    var body = req.params['0'].match(reURLbody);
     var host = req.get('host');
     if (head && body) {
             var link = new URL({
-                originalURL: head + "://" + body,
+                originalURL: head + body,
                 shortURL: Math.floor(Math.random() * 10000).toString()
             });
             link.save(function(err, data) {
                 if (err) {
-                    res.render('new.ejs', { title: 'Sorry', msg: "Error: Domain already taken!", code: ' '});
+                    res.render('new.ejs', { title: 'Sorry', msg: "Error: Domain already taken!", code: ''});
                 } else {
                     res.render("new.ejs", { title: 'Oh yeah...', msg: "Success! Just take note of your shortened URL", 
                     code: JSON.stringify({"original": link.originalURL, "shortened": "http://" + host +"/" + link.shortURL})
@@ -50,18 +51,18 @@ app.get("/new/:head\://:body", function(req, res) {
                 }
             });
     } else {
-        res.render("new.ejs", { title: 'Sorry', msg: "Error: Invalid URL! Please key in an URL with the following format:", code: "http://" + host +"/http://www.blah.com"});
+        res.render("new.ejs", { title: 'Sorry', msg: "Error: Invalid URL! Please key in an URL with the following format:", code: "http://" + host + blah});
     }
 });
 
 app.get("/new/:stuff", function(req, res) {
     var host = req.get('host');
-    res.render("new.ejs", { title: 'Sorry', msg: "Error: Invalid URL! Please key in an URL with the following format:", code: "http://" + host +"/http://www.blah.com" }); 
+    res.render("new.ejs", { title: 'Sorry', msg: "Error: Invalid URL! Please key in an URL with the following format:", code: "http://" + host + blah }); 
 });
 
 app.get("/new", function(req, res) {
     var host = req.get('host');
-    res.render("new.ejs", { title: 'Oops! You\'ve forgotten something!', msg: 'Please key an URL in the following format:', code: "http://" + host +"/http://www.blah.com"});
+    res.render("new.ejs", { title: 'Oops! You\'ve forgotten something!', msg: 'Please key an URL in the following format:', code: "http://" + host + blah});
 });
 
 app.get("/:url", function(req, res) {
