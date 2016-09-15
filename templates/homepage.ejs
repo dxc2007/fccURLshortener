@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <title>Homepage</title>
+    <link rel="stylesheet" type="text/css" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+    <link rel="stylesheet" type="text/css" href="style.css">
+</head>
+<body><h1>FCC Timestamp Microservice</h1>
+  <blockquote>
+    <h3>User stories:</h3>
+    <ol>
+      <li>User Story:  I can pass a URL as a parameter and I will receive a shortened URL in the JSON response.
+      </li>
+      <li>User Story: If I pass an invalid URL that doesn't follow the valid http://www.example.com format, the JSON response will contain an error instead.
+      </li>
+      <li>User Story: When I visit that shortened URL, it will redirect me to my original link.
+      </li>
+    </ol>
+  </blockquote>
+  <h3>To shorten your URL:</h3>
+  <code>https://<%= host %>/new/https://www.google.com</code>
+  <code>https://<%= host %>/new/1471824000000</code>
+  <h3>URL shortener output:</h3>
+  <code>{"original": "https://www.google.com", "shortened": "http://<%=host%>/8712"}</code>
+  <h3>To redirect to original URL:</h3>
+  <code>https://<%= host %>/8712</code>
+</body>
+</html>
