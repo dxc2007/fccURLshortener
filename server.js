@@ -4,6 +4,7 @@ var path = require('path');
 var mongoose = require('mongoose');
 
 var port = process.env.PORT || 8080;
+// var mongoURL = 'mongodb://127.0.0.1:27017/data';
 var mongoURL = process.env.MONGOLAB_URI;
 var reURLhead = /^https?:$/;
 var reURLbody = /^\/\/[www]?[\S]*[a-z]{2,5}\/?[\S]*/;
@@ -33,11 +34,16 @@ var URL = mongoose.model("URL", new Schema({
 mongoose.connect(mongoURL);
 
 app.use(express.static(path.join(__dirname, 'templates')));
-app.use('/styles', express.static(path.join(__dirname, 'templates')));
+// app.use('/styles', express.static(path.join(__dirname, 'templates')));
 app.use(function(req, res, next) {
    host = req.get('host');
    next();
 });
+// do this after adding routes.js;
+/*app.use(function(req, res, next) {
+    res.status(404).send("Sorry, the page is not found. kthnxbai."); 
+    next();
+});*/
 
 app.set("view engine", "ejs");
 app.set("views", path.join(__dirname, "templates"));
@@ -83,7 +89,7 @@ app.get("/new", function(req, res) {
 
 app.get("/:url", function(req, res) {
     console.log(req.params);
-    console.log(req.params.url);
+    // console.log(req.params.url);
     URL.findOne({ shortURL : req.params.url}, function(err, data) {
         if (err) {
             console.log("Error is: " + err);
